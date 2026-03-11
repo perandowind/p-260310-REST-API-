@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -36,4 +37,18 @@ public class ApiV1PostController {
         Post post = postService.findById(id).get();
         return new PostDto(post);
     }
+
+    public Map<String, Object> delete() {
+
+        // 작업 ~~
+
+        Map<String, Object> result = Map.of(
+                "msg", "%d번 댓글이 삭제되었습니다.".formatted(1),
+                "resultCode", "204-1"
+        );
+
+        return result;
+
+    }
+
 }
