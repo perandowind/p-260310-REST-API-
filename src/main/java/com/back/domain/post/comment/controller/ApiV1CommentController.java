@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -45,13 +46,18 @@ public class ApiV1CommentController {
     @GetMapping("/{commentId}/delete")
     @ResponseBody
     @Transactional
-    public String delete(
+    public Map<String, Object> delete(
             @PathVariable int postId,
             @PathVariable int commentId
     ) {
         Post post = postService.findById(postId).get();
         post.deleteComment(commentId);
 
-        return "%d번 댓글이 삭제되었습니다.".formatted(commentId);
+        Map<String, Object> result = Map.of(
+                "msg", "%d번 댓글이 삭제되었습니다.".formatted(commentId),
+                "resultCode", "204-1"
+        );
+
+        return result;
     }
 }
