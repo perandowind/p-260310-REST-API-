@@ -12,7 +12,7 @@ public record PostDto(
         LocalDateTime modifyDate
 ) {
 
-    public PostDto(Post post){
+    public PostDto(Post post) {
         this(
                 post.getId(),
                 post.getTitle(),
