@@ -45,7 +45,10 @@ public class ResponseAspect {
         System.out.println("이건 ResponseAspect의 후처리입니다.");
 
         if(rst instanceof RsData rsData) {
-            int statusCode = 201;
+            String str = rsData.resultCode();
+            String status_str = str.split("-")[0];
+            int statusCode = Integer.valueOf(status_str);
+//            int statusCode = 201;
             response.setStatus(statusCode);
         }
 
