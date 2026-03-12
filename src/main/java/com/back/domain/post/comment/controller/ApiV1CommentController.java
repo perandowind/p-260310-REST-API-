@@ -59,13 +59,14 @@ public class ApiV1CommentController {
             @PathVariable int postId,
             @RequestBody @Valid CommentWriteReqBody reqBody) {
 
-        Post post = postService.findById(postId).get();
-        Comment comment = post.addComment(reqBody.content);
+        Post post = postService.findById(postId).get();     //select
+        Comment comment = post.addComment(reqBody.content); //insert
 
-        postService.flush();
+        // =========== 이 시점에서 comment id가 필요해 =============
+        postService.flush(); // flush: 현 시점에서 DB에 반영, insert가 실행 -> id값 정해짐
 
         return new RsData<>(
-                "%d번 댓글이 성공적으로 작성되었습니다.".formatted(comment.getId()),
+                "%d번 댓글이 성공적으로 작성되었습니다.".formatted(comment.getId()), //id가 존재해서 에러X
                 "201-1",
                 new CommentWriteResBody(
                         new CommentDto(comment)
@@ -86,7 +87,7 @@ public class ApiV1CommentController {
 
         return new RsData<>(
                 "%d번 댓글이 삭제되었습니다.".formatted(commentId),
-                "204-1",
+                "200-1",
                 new CommentDto(comment)
         );
     }
