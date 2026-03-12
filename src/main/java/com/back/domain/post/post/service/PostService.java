@@ -44,4 +44,8 @@ public class PostService {
     public void deleteById(int id) {
         postRepository.deleteById(id);
     }
+
+    public void flush() {
+        postRepository.flush();
+    }
 }
