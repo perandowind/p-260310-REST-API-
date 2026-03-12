@@ -75,9 +75,40 @@ public class ApiV1PostController {
 
         return new RsData<>(
                 "%d번 댓글이 삭제되었습니다.".formatted(id),
-                "204-1"
+                "200-1"
         );
 
     }
+
+    record PostModifyReqBody(
+            @Size(min = 2, max = 10, message = "03-title-제목은 2자 이상 10자 이하로 입력해주세요.")
+            @NotBlank(message = "01-title-제목은 필수입니다.")
+            String title,
+
+            @NotBlank(message = "02-content-내용은 필수입니다.")
+            @Size(min = 2, max = 100, message = "04-content-내용은 2자 이상 100자 이하로 입력해주세요.")
+            String content
+    ){}
+
+    record PostModifyResBody(
+            PostDto postDto
+    ){}
+
+    @PutMapping("/{id}")
+    public RsData<PostModifyResBody> modify(@PathVariable int id,
+                                            @RequestBody @Valid PostModifyReqBody reqBody) {
+        Post post = postService.modify(id, reqBody.title, reqBody.content);
+
+        return new RsData<>(
+                "%d번 글이 성공적으로 수정되었습니다.".formatted(post.getId()),
+                "200-1",
+                new PostModifyResBody(
+                        new PostDto(post)
+                )
+        );
+
+    }
+
+
 
 }
