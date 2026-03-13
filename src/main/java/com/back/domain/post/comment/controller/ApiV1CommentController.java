@@ -28,7 +28,7 @@ public class ApiV1CommentController {
         Post post = postService.findById(postId).get();
         List<Comment> comments = post.getComments();
 
-        List<CommentDto> commentDtoList = comments.stream()
+        List<CommentDto> commentDtoList = comments.reversed().stream()
                 .map(CommentDto::new)
                 .toList();
 
@@ -66,7 +66,7 @@ public class ApiV1CommentController {
         postService.flush(); // flush: 현 시점에서 DB에 반영, insert가 실행 -> id값 정해짐
 
         return new RsData<>(
-                "%d번 댓글이 성공적으로 작성되었습니다.".formatted(comment.getId()), //id가 존재해서 에러X
+                "%d번 댓글이 생성되었습니다.".formatted(comment.getId()), //id가 존재해서 에러X
                 "201-1",
                 new CommentWriteResBody(
                         new CommentDto(comment)
@@ -89,6 +89,26 @@ public class ApiV1CommentController {
                 "%d번 댓글이 삭제되었습니다.".formatted(commentId),
                 "200-1",
                 new CommentDto(comment)
+        );
+    }
+
+    record CommentModifyReqBody(
+            String content
+    ){}
+
+    @PutMapping("{commentId}")
+    @Transactional
+    public RsData<Void> modify(
+            @PathVariable int postId,
+            @PathVariable int commentId,
+            @RequestBody CommentModifyReqBody reqBody
+    ) {
+        Post post = postService.findById(postId).get();
+        post.modifyComment(commentId, reqBody.content);
+
+        return new RsData<>(
+                "%d번 댓글이 수정되었습니다.".formatted(commentId),
+                "200-1"
         );
     }
 }
